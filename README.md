@@ -81,6 +81,42 @@ Exemplos de retorno do serviço
   deixe claro caso haja instruções especiais para execução do mesmo
   Classificação da informação: Uso Interno
 
+# 🗳️ Desafio Votação - Cooperativa
 
+![CI Quality Gate](https://github.com/vinipjrs/desafio-votacao-fullstack.git/actions/workflows/main.yml/badge.svg)
+![Build Status](https://github.com/vinipjrs/desafio-votacao-fullstack.git/actions/workflows/main.yml/badge.svg?branch=main)
 
-# desafio-votacao
+Sistema de votação cooperativa com foco em experiência mobile e agilidade. O projeto segue a estética **Verdant** (verde premium, glassmorphism e tipografia moderna).
+
+## 🔥 O que tem de novo?
+- **Fluxo Automatizado**: Chega de abrir sessão na mão. Ao clicar em "Quero Votar", o sistema já inicia uma sessão de 1 minuto (default) e te joga pro voto.
+- **Timer em Real-time**: Contador regressivo sincronizado com o servidor.
+- **Monitoramento Profissional**: Integrado com Sentry pra gente pegar qualquer bug no ato.
+- **Qualidade de Código**: Exceptions tratadas globalmente no Java e Error Boundaries no React.
+
+## 🛠️ Como rodar
+
+O projeto foi configurado para ser **Docker-First**. Isso significa que você não precisa instalar Java, Node ou Banco de Dados na sua máquina; o Docker cuida de baixar todas as dependências e configurar os serviços.
+
+### 1. Preparação (Clone e Config)
+1. Clone o repositório.
+2. Certifique-se de que o Docker Desktop está rodando.
+3. Crie um arquivo `.env` na raiz (use o `.env.example` se disponível ou peça ao setup).
+
+### 2. Execução via Docker (Recomendado)
+Na raiz do projeto, execute:
+```bash
+docker-compose up -d --build
+```
+*O parâmetro `--build` garante que o Docker baixe todas as dependências do Java (Maven) e do React (NPM) dentro dos containers, mesmo que elas não existam na sua máquina local.*
+
+### 3. Execução Local (Sem Docker)
+Se quiser rodar fora do Docker, você precisará preparar as dependências manualmente:
+- **Backend**: `cd back-java && ./mvnw clean install`
+- **Frontend**: `cd front-react && npm install`
+
+## 📝 Notas de Dev
+- O banco é Postgres e as tabelas são criadas automaticamente via JPA (ddl-auto: update).
+- Redis é usado para cache de votação (idempotência).
+- RabbitMQ gerencia a fila de processamento de votos.
+- Sentry tá com DSN de exemplo, lembra de trocar no `application.yml` e no `main.tsx` se for pra produção.

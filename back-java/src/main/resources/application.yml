@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: back-java # Nome simples do microserviço
+  jpa:
+    hibernate:
+      ddl-auto: update # Ajustado pra atualizar o banco automaticamente no boot
+    show-sql: true # Logar queries pra facilitar o debug
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+sentry:
+  # TODO: Trocar pelo DSN real do Sentry quando subir pra prod
+  dsn: https://examplePublicKey@o0.ingest.sentry.io/0 
+  traces-sample-rate: 1.0 # Capturar 100% das transações (ajustar depois pra poupar cota)
+  exception-resolver-order: -2147483648 

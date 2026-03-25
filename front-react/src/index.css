@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: 153 100% 27%;
+  --primary-light: 153 100% 45%;
+  --primary-dark: 153 100% 20%;
+  --bg-gradient: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+
+@layer base {
+  body {
+    @apply antialiased text-slate-900 font-['Plus_Jakarta_Sans',sans-serif];
+    background: var(--bg-gradient);
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-['Outfit',sans-serif] tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-[0_8px_32px_0_rgba(0,138,81,0.1)] rounded-[2rem];
+  }
+  .btn-primary {
+    @apply bg-[#008a51] hover:bg-[#007042] text-white font-bold py-4 px-8 rounded-2xl 
+           transition-all duration-300 transform active:scale-95 shadow-lg shadow-green-900/10
+           flex items-center justify-center gap-2;
+  }
+  .btn-secondary {
+    @apply bg-white border-2 border-[#008a51] text-[#008a51] hover:bg-green-50 font-bold py-4 px-8 rounded-2xl 
+           transition-all duration-300 transform active:scale-95
+           flex items-center justify-center gap-2;
+  }
+  .input-verdant {
+    @apply w-full px-6 py-4 rounded-2xl border-2 border-green-100 bg-white/50 
+           focus:border-[#008a51] focus:bg-white outline-none transition-all 
+           placeholder:text-slate-300 text-lg;
+  }
+  .status-badge {
+    @apply px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}

@@ -1,0 +1,52 @@
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.tar
+*.zip
+.mvn/wrapper/maven-wrapper.jar
+!MavenWrapper.java
+.factorypath
+build.log
+build_errors.log
+build_final.log
+test_build.log
+test_build_utf8.log
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+
+# Secrets & Config
+.env
+.env.*
+!.env.example
+
+# Logs & Temporary Files
+*.log
+build_error.txt
+build_error_utf8.txt
+build_package_error.txt
+build_package_utf8.txt
+build_test_compile_error.txt
+temp/
+tmp/

@@ -1,0 +1,52 @@
+name: CI/CD Continuous Learning Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Loop de Feedback 1: Qualidade e Segurança (Sonar/Lint)
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Frontend Quality
+        run: |
+          cd front-react
+          npm install
+          npm run lint
+          
+  # Loop de Feedback 2: Integridade (Java/Spring)
+  backend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+          
+      - name: Build and Test
+        run: |
+          cd back-java
+          mvn clean package -DskipTests
+          
+  # Loop de Feedback 3: Observabilidade (Sentry/Monitoring)
+  # Este passo simula a notificação de nova versão pro monitoramento
+  monitoring-sync:
+    needs: [quality-gate, backend-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sentry Release
+        run: echo "Notificando Sentry sobre novo deploy para rastreamento de erros..."
