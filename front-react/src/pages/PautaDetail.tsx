@@ -4,6 +4,7 @@ import { ArrowLeft, BarChart3, Vote } from 'lucide-react';
 import * as Sentry from "@sentry/react";
 import { usePauta } from '../hooks/usePauta';
 import { useVoting } from '../hooks/useVoting';
+import type { VotoOpcao } from '../types';
 import { PautaHeader } from '../components/PautaHeader';
 import { ResultSummary } from '../components/ResultSummary';
 import { VoteForm } from '../components/VoteForm';
@@ -36,7 +37,7 @@ export default function PautaDetail() {
     }
   };
   
-  const onVote = async (cpf: string, opcao: any) => {
+  const onVote = async (cpf: string, opcao: VotoOpcao) => {
     try {
       const success = await handleVote(cpf, opcao);
       if (success) { 

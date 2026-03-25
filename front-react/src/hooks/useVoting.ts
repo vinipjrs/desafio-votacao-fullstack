@@ -11,9 +11,9 @@ export function useVoting(id: string | undefined) {
       await api.post(`/pautas/${id}/sessoes`, { minutosDuracao: minutos });
       // Sessão abre via API pra garantir que o tempo conte pra todo mundo igual
       return true;
-    } catch (err: any) {
+    } catch (error) {
       // Por enquanto um alert resolve, depois a gente coloca um Toast bonitão
-      alert(err.response?.data?.mensagem || 'Erro ao abrir sessão');
+      alert((error as { response?: { data?: { mensagem?: string } } }).response?.data?.mensagem || 'Erro ao abrir sessão');
       return false;
     } finally {
       setActing(false);
@@ -29,8 +29,8 @@ export function useVoting(id: string | undefined) {
       setActing(true);
       await api.post(`/pautas/${id}/votos`, { cpf, opcao });
       return true;
-    } catch (err: any) {
-      alert(err.response?.data?.mensagem || 'Erro ao registrar voto');
+    } catch (error) {
+      alert((error as { response?: { data?: { mensagem?: string } } }).response?.data?.mensagem || 'Erro ao registrar voto');
       return false;
     } finally {
       setActing(false);

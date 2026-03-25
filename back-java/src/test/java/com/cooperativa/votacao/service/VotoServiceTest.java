@@ -30,7 +30,7 @@ class VotoServiceTest {
     @Mock
     private SessaoVotacaoRepository sessaoRepository;
     @Mock
-    private CpfValidationClient cpfValidationClient;
+    private CpfValidationService cpfValidationService;
     @Mock
     private VotoProducer votoProducer;
     @Mock

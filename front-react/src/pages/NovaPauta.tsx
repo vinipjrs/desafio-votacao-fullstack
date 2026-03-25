@@ -15,7 +15,7 @@ export default function NovaPauta() {
       setLoading(true);
       await api.post('/pautas', { titulo, descricao });
       navigate('/');
-    } catch (err) { alert('Erro ao criar pauta'); } finally { setLoading(false); }
+    } catch { alert('Erro ao criar pauta'); } finally { setLoading(false); }
   };
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
