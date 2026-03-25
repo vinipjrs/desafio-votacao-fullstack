@@ -83,8 +83,8 @@ Exemplos de retorno do serviço
 
 # 🗳️ Desafio Votação - Cooperativa
 
-![CI Quality Gate](https://github.com/vinipjrs/desafio-votacao-fullstack.git/actions/workflows/main.yml/badge.svg)
-![Build Status](https://github.com/vinipjrs/desafio-votacao-fullstack.git/actions/workflows/main.yml/badge.svg?branch=main)
+![CI Quality Gate](https://github.com/vinipjrs/desafio-votacao-fullstack/actions/workflows/main.yml/badge.svg)
+![Build Status](https://github.com/vinipjrs/desafio-votacao-fullstack/actions/workflows/main.yml/badge.svg?branch=main)
 
 Sistema de votação cooperativa com foco em experiência mobile e agilidade. O projeto segue a estética **Verdant** (verde premium, glassmorphism e tipografia moderna).
 
