@@ -14,12 +14,36 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String TIMESTAMP = "timestamp";
+    private static final String MENSAGEM = "mensagem";
+    private static final String STATUS = "status";
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> handleBusinessException(BusinessException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(MENSAGEM, ex.getMessage());
+        body.put(STATUS, HttpStatus.BAD_REQUEST.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Object> handleObjectNotFoundException(ObjectNotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(MENSAGEM, ex.getMessage());
+        body.put(STATUS, HttpStatus.NOT_FOUND.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("mensagem", ex.getMessage());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(MENSAGEM, ex.getMessage());
+        body.put(STATUS, HttpStatus.BAD_REQUEST.value());
         
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -27,8 +51,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", HttpStatus.BAD_REQUEST.value());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(STATUS, HttpStatus.BAD_REQUEST.value());
 
         String errors = ex.getBindingResult()
                 .getFieldErrors()
@@ -36,7 +60,7 @@ public class GlobalExceptionHandler {
                 .map(x -> x.getField() + ": " + x.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         
-        body.put("mensagem", "Erro de validação: " + errors);
+        body.put(MENSAGEM, "Erro de validação: " + errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -44,9 +68,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("mensagem", "Ocorreu um erro interno inesperado."); // Mensagem genérica pra não expor nada sensível
-        body.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        body.put(TIMESTAMP, LocalDateTime.now());
+        body.put(MENSAGEM, "Ocorreu um erro interno inesperado."); // Mensagem genérica pra não expor nada sensível
+        body.put(STATUS, HttpStatus.INTERNAL_SERVER_ERROR.value());
         
         // No mundo real, aqui o Sentry já capturou o log detalhado.
         // O usuário só vê a mensagem amigável acima.

@@ -101,6 +101,24 @@ O projeto foi configurado para ser **Docker-First**. Isso significa que você n�
 ### 1. Preparação (Clone e Config)
 1. Clone o repositório.
 2. Certifique-se de que o Docker Desktop está rodando.
+### 📊 Análise de Qualidade (SonarQube)
+
+A análise de qualidade é realizada via Docker, eliminando a necessidade de instalar Maven ou Node localmente. **Certifique-se de que o ambiente (`docker-compose up`) esteja rodando antes de iniciar.**
+
+#### Backend (Java)
+Execute na raiz do projeto:
+```bash
+docker run --rm --network desafio-votacao-java-react_default -v "${PWD}/back-java:/app" -w /app maven:3.9-eclipse-temurin-17 mvn clean verify sonar:sonar "-Dsonar.projectKey=assembleia" "-Dsonar.projectName=assembleia" "-Dsonar.host.url=http://votacao-sonarqube:9000" "-Dsonar.token=sqp_c76cc39850166d6edb5fba058084340f4bc45b2b"
+```
+
+#### Frontend (React)
+Execute na raiz do projeto:
+```bash
+docker run --rm --network desafio-votacao-java-react_default -v "${PWD}/front-react:/usr/src" sonarsource/sonar-scanner-cli -Dsonar.projectKey=front-assembleia -Dsonar.host.url=http://votacao-sonarqube:9000 -Dsonar.token=sqp_c76cc39850166d6edb5fba058084340f4bc45b2b
+```
+
+Os resultados estarão disponíveis em: [http://localhost:9000/dashboard?id=assembleia](http://localhost:9000/dashboard?id=assembleia)
+
 3. Crie um arquivo `.env` na raiz (use o `.env.example` se disponível ou peça ao setup).
 
 ### 2. Execução via Docker (Recomendado)
@@ -114,6 +132,8 @@ docker-compose up -d --build
 Se quiser rodar fora do Docker, você precisará preparar as dependências manualmente:
 - **Backend**: `cd back-java && ./mvnw clean install`
 - **Frontend**: `cd front-react && npm install`
+- **SonarQube (Qualidade)**: `http://localhost:9000` (Admin: `admin` / `admin`)
+- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
 
 ## 📝 Notas de Dev
 - O banco é Postgres e as tabelas são criadas automaticamente via JPA (ddl-auto: update).

@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "sonar": "sonar-scanner"
   },
   "dependencies": {
     "@sentry/react": "^8.55.1",
@@ -33,6 +34,7 @@
     "globals": "^17.4.0",
     "jsdom": "^26.0.0",
     "postcss": "^8.5.8",
+    "sonarqube-scanner": "^4.3.5",
     "tailwindcss": "^3.4.19",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",

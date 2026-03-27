@@ -12,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import com.cooperativa.votacao.exception.BusinessException;
+import com.cooperativa.votacao.exception.ObjectNotFoundException;
+
+
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,5 +50,26 @@ class SessaoVotacaoServiceTest {
         assertEquals(pautaId, sessao.pautaId());
         assertTrue(sessao.dataFechamento().isAfter(sessao.dataAbertura()));
         verify(sessaoRepository, times(1)).save(any(SessaoVotacao.class));
+    }
+
+    @Test
+    void abrirSessao_deveLancarErroSePautaNaoExiste() {
+        Long pautaId = 1L;
+        when(pautaRepository.findById(pautaId)).thenReturn(Optional.empty());
+
+        assertThrows(ObjectNotFoundException.class, () -> sessaoVotacaoService.abrirSessao(pautaId, null));
+    }
+
+    @Test
+    void abrirSessao_deveLancarErroSeSessaoJaAberta() {
+        Long pautaId = 1L;
+        Pauta pauta = Pauta.builder().id(pautaId).build();
+        SessaoVotacao sessaoExistente = SessaoVotacao.builder().id(1L).build();
+
+        when(pautaRepository.findById(pautaId)).thenReturn(Optional.of(pauta));
+        when(sessaoRepository.findFirstByPautaIdAndDataAberturaBeforeAndDataFechamentoAfter(any(), any(), any()))
+                .thenReturn(Optional.of(sessaoExistente));
+
+        assertThrows(BusinessException.class, () -> sessaoVotacaoService.abrirSessao(pautaId, null));
     }
 }

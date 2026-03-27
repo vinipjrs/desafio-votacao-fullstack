@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,5 +42,36 @@ class PautaServiceTest {
         assertNotNull(resultado);
         assertEquals("Teste", resultado.titulo());
         verify(pautaRepository, times(1)).save(any(Pauta.class));
+    }
+
+    @Test
+    void listarPautas_deveRetornarListaDeResponseDTO() {
+        Pauta pauta = Pauta.builder().id(1L).titulo("Teste").descricao("Desc").criadoEm(LocalDateTime.now()).build();
+        when(pautaRepository.findAll()).thenReturn(List.of(pauta));
+
+        List<PautaResponseDTO> resultado = pautaService.listarPautas();
+
+        assertNotNull(resultado);
+        assertFalse(resultado.isEmpty());
+        assertEquals(1, resultado.size());
+        assertEquals("Teste", resultado.get(0).titulo());
+    }
+
+    @Test
+    void buscarPorId_deveRetornarPautaQuandoEncontrada() {
+        Pauta pauta = Pauta.builder().id(1L).titulo("Encontrada").build();
+        when(pautaRepository.findById(1L)).thenReturn(java.util.Optional.of(pauta));
+
+        PautaResponseDTO resultado = pautaService.buscarPorId(1L);
+
+        assertNotNull(resultado);
+        assertEquals("Encontrada", resultado.titulo());
+    }
+
+    @Test
+    void buscarPorId_deveLancarExcecaoQuandoNaoEncontrada() {
+        when(pautaRepository.findById(1L)).thenReturn(java.util.Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> pautaService.buscarPorId(1L));
     }
 }

@@ -4,6 +4,8 @@ import com.cooperativa.votacao.domain.Pauta;
 import com.cooperativa.votacao.domain.SessaoVotacao;
 import com.cooperativa.votacao.dto.SessaoRequestDTO;
 import com.cooperativa.votacao.dto.SessaoResponseDTO;
+import com.cooperativa.votacao.exception.BusinessException;
+import com.cooperativa.votacao.exception.ObjectNotFoundException;
 import com.cooperativa.votacao.repository.PautaRepository;
 import com.cooperativa.votacao.repository.SessaoVotacaoRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,12 @@ public class SessaoVotacaoService {
     @Transactional
     public SessaoResponseDTO abrirSessao(Long pautaId, SessaoRequestDTO dto) {
         Pauta pautaFound = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada."));
+                .orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada."));
         
         sessaoRepository.findFirstByPautaIdAndDataAberturaBeforeAndDataFechamentoAfter(
             pautaId, LocalDateTime.now(), LocalDateTime.now()
         ).ifPresent(s -> {
-            throw new RuntimeException("Já existe uma sessão de votação ativa para esta pauta.");
+            throw new BusinessException("Já existe uma sessão de votação ativa para esta pauta.");
         });
 
         int minDuracao = (dto != null && dto.minutosDuracao() != null && dto.minutosDuracao() > 0) 

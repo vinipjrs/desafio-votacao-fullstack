@@ -1,5 +1,7 @@
 package com.cooperativa.votacao.service;
 
+import com.cooperativa.votacao.exception.BusinessException;
+import com.cooperativa.votacao.exception.ObjectNotFoundException;
 import com.cooperativa.votacao.domain.Pauta;
 import com.cooperativa.votacao.domain.SessaoVotacao;
 import com.cooperativa.votacao.domain.VotoOpcao;
@@ -34,24 +36,24 @@ public class VotoService {
 
         String cacheKey = "voto:pauta:" + pautaId + ":cpf:" + cpf;
         if (Boolean.TRUE.equals(redisTemplate.hasKey(cacheKey))) {
-            throw new RuntimeException("O CPF informado já registrou um voto para esta pauta.");
+            throw new BusinessException("O CPF informado já registrou um voto para esta pauta.");
         }
 
         if (votoRepository.existsByPautaIdAndCpf(pautaId, cpf)) {
             redisTemplate.opsForValue().set(cacheKey, "true", Duration.ofHours(24));
-            throw new RuntimeException("O CPF informado já registrou um voto para esta pauta.");
+            throw new BusinessException("O CPF informado já registrou um voto para esta pauta.");
         }
 
         if (!pautaRepository.existsById(pautaId)) {
-            throw new RuntimeException("Pauta não encontrada.");
+            throw new ObjectNotFoundException("Pauta não encontrada.");
         }
 
-        SessaoVotacao sessao = sessaoRepository.findFirstByPautaIdAndDataAberturaBeforeAndDataFechamentoAfter(
+        sessaoRepository.findFirstByPautaIdAndDataAberturaBeforeAndDataFechamentoAfter(
                 pautaId, LocalDateTime.now(), LocalDateTime.now()
-        ).orElseThrow(() -> new RuntimeException("Não há sessão de votação ativa para esta pauta."));
+        ).orElseThrow(() -> new BusinessException("Não há sessão de votação ativa para esta pauta."));
 
         if (CpfValidationStatus.UNABLE_TO_VOTE.equals(cpfValidationService.validarCpf(cpf).status())) {
-            throw new RuntimeException("O CPF informado não está autorizado a votar.");
+            throw new BusinessException("O CPF informado não está autorizado a votar.");
         }
 
         redisTemplate.opsForValue().set(cacheKey, "true", Duration.ofHours(24));
@@ -60,7 +62,7 @@ public class VotoService {
 
     public ResultadoVotacaoDTO obterResultado(Long pautaId) {
         Pauta pauta = pautaRepository.findById(pautaId)
-                .orElseThrow(() -> new RuntimeException("Pauta não encontrada."));
+                .orElseThrow(() -> new ObjectNotFoundException("Pauta não encontrada."));
 
         long sim = votoRepository.countByPautaIdAndOpcao(pautaId, VotoOpcao.SIM);
         long nao = votoRepository.countByPautaIdAndOpcao(pautaId, VotoOpcao.NAO);
